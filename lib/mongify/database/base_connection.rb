@@ -9,7 +9,7 @@ module Mongify
       REQUIRED_FIELDS = %w{host}
       # List of all the available fields to make up a connection
       AVAILABLE_FIELDS = %w{adapter host username password database socket port encoding}
-      
+
       def initialize(options=nil)
         if options
           options.stringify_keys!
@@ -18,7 +18,7 @@ module Mongify
           end
         end
       end
-      
+
       # Returns all settings as a hash, this is used mainly in building ActiveRecord::Base.establish_connection
       def to_hash
         hash = {}
@@ -33,7 +33,7 @@ module Mongify
       def valid?
         #TODO: Improve this to create an errors array with detailed errors (or maybe just use activemodel)
         REQUIRED_FIELDS.each do |require_field|
-          return false unless instance_variables.include?("@#{require_field}") and
+          return false unless instance_variables.include?(:"@#{require_field}") and
                               !instance_variable_get("@#{require_field}").to_s.empty?
         end
         true
@@ -51,14 +51,14 @@ module Mongify
 
 
       # Returns true if we are trying to respond_to AVAILABLE_FIELDS functions
-      def respond_to?(method, *args) 
+      def respond_to?(method, *args)
         return true if AVAILABLE_FIELDS.include?(method.to_s)
         super(method)
       end
-      
+
       # Building set and/or return functions for AVAILABLE_FIELDS
       # Example:
-      # 
+      #
       #   def host(value=nil)
       #     @host = value.to_s unless value.nil?
       #     @host
